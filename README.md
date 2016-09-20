@@ -1,11 +1,12 @@
 # CentOS 7 Ansible Test Image #
+[![Docker Automated build](https://img.shields.io/docker/automated/samdoran/centos7-ansible.svg?maxAge=2592000)](https://hub.docker.com/r/samdoran/centos7-ansible/)
 
 This is a container for testing Ansible roles.
 
-Build
+## Build ##
 
-    docker build -i -t [image tag] -f [dockefile] .
+    docker build -i -t [image tag]
 
-Run
+## Run ##
 
-    docker run -e TERM=xterm --rm -i -t [image tag] bash
+    docker run -e TERM=xterm --rm -i -t samdoran/centos7-ansible bash

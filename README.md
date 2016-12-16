@@ -5,7 +5,7 @@ This is a container for testing Ansible roles.
 
 ## Build ##
 
-    docker build -t [image tag]
+    docker build -t [image tag] .
 
 ## Run ##
 

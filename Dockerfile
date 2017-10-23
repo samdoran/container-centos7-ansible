@@ -10,10 +10,12 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == system
     rm -f /lib/systemd/system/basic.target.wants/*;\
     rm -f /lib/systemd/system/anaconda.target.wants/*;
 
+COPY ansible.repo /etc/yum.repos.d/ansible.repo
+
 RUN yum --disableplugin=fastestmirror -y install epel-release \
-    && yum --disableplugin=fastestmirror -y --enablerepo=epel-testing install ansible initscripts sudo cronie \
+    && yum --disableplugin=fastestmirror -y install ansible initscripts sudo cronie \
     && yum -y update \
-    && yum clean all
+    && rm -rf /var/cache/yum
 
 RUN sed -i 's/Defaults    requiretty/Defaults    !requiretty/g' /etc/sudoers
 

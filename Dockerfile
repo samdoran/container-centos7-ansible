@@ -1,4 +1,5 @@
 FROM centos:7
+ENV container=docker
 
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
     rm -f /lib/systemd/system/multi-user.target.wants/*;\
@@ -11,8 +12,9 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == system
 
 COPY ansible.repo /etc/yum.repos.d/ansible.repo
 
-RUN yum --disableplugin=fastestmirror -y install epel-release \
-    && yum --disableplugin=fastestmirror -y install ansible initscripts sudo cronie \
+RUN yum makecache fast \
+    && yum --disableplugin=fastestmirror -y install epel-release \
+    && yum --disableplugin=fastestmirror -y install ansible initscripts sudo cronie which python-pip \
     && yum -y update \
     && rm -rf /var/cache/yum
 
@@ -24,4 +26,4 @@ RUN echo '# BLANK FSTAB' > /etc/fstab
 RUN echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
 
 VOLUME ["/sys/fs/cgroup"]
-CMD ["/usr/sbin/init"]
+CMD ["/usr/lib/systemd/systemd"]

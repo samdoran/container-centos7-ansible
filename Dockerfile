@@ -14,7 +14,16 @@ COPY ansible.repo /etc/yum.repos.d/ansible.repo
 
 RUN yum makecache fast \
     && yum --disableplugin=fastestmirror -y install epel-release \
-    && yum --disableplugin=fastestmirror -y install ansible initscripts sudo cronie which python-pip \
+    && yum --disableplugin=fastestmirror -y install \
+    ansible \
+    bash \
+    initscripts \
+    sudo \
+    cronie \
+    python \
+    python-pip \
+    which \
+    yum-plugin-ovl \
     && yum -y update \
     && rm -rf /var/cache/yum
 

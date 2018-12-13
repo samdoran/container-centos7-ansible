@@ -17,6 +17,8 @@ RUN yum makecache fast \
     && yum --disableplugin=fastestmirror -y install \
     ansible \
     bash \
+    deltarpm \
+    e2fsprogs \
     initscripts \
     sudo \
     cronie \

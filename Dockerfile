@@ -1,5 +1,6 @@
 FROM centos:7
-ENV container=docker
+
+ENV CONTAINER=docker
 
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
     rm -f /lib/systemd/system/multi-user.target.wants/*;\

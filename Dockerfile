@@ -23,7 +23,7 @@ RUN yum makecache fast \
     sudo \
     cronie \
     python \
-    python-pip \
+    python2-pip \
     which \
     yum-plugin-ovl \
     && yum -y update \

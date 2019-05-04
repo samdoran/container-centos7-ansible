@@ -26,6 +26,7 @@ RUN yum makecache fast \
     python \
     python2-pip \
     which \
+    unzip \
     yum-plugin-ovl \
     && yum -y update \
     && rm -rf /var/cache/yum

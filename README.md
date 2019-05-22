@@ -1,7 +1,9 @@
 # CentOS 7 Ansible Test Image #
-[![Docker Automated build](https://img.shields.io/docker/automated/samdoran/centos7-ansible.svg?maxAge=2592000)](https://hub.docker.com/r/samdoran/centos7-ansible/)
+[![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/samdoran/centos7-ansible.svg)](https://hub.docker.com/r/samdoran/centos7-ansible/) ![Docker Pulls](https://img.shields.io/docker/pulls/samdoran/centos7-ansible.svg)
 
-This is a container for testing Ansible roles. It includes the latest version of Ansible and is rebuilt regularly.
+This is a container for testing Ansible roles with [Molecule](https://molecule.readthedocs.io/en/stable/). It includes the latest version of Ansible available on this platform and is rebuilt regularly. It can also be used if you need to run Ansible on a specific operating system.
+
+Note that Molecule does not use the Ansible version installed in the container when running tests.
 
 ## Build ##
 
@@ -9,25 +11,30 @@ To build your own version of this container, run:
 
     docker build -t centos7-ansible .
 
-## Testing a role inside the container ##
+## Testing a role using Molecule ##
 
-To run a role inside the container, you need to run the container with your role mounted inside it. I mount my current role directory as `/usr/share/ansible/roles/role_under_test` inside the container, but you can call it whatever you like.
+If you don't already have a role repository, you can initialize one using this [cookiecutter template](https://github.com/samdoran/cookiecutter-ansible-role).
 
-    docker run --privileged -d --volume="$(pwd)":/usr/share/ansible/roles/role_under_test:ro --name ansible-test centos7-ansible /sbin/init
+`molecule init template --url https://github.com/samdoran/cookiecutter-ansible-role`
 
-Once your container is running with your role mounted inside it, you can run you test playbook included inside the role. This is a simple playbook that just runs `role_under_test` against `localhost`.
+Then run `molecule test` to run the full test suite against the role.
 
-    docker exec -t ansible-test ansible-playbook /usr/share/ansible/roles/role_under_test/tests/test.yml
+Run `molecule converge` to run the role against the test container but leave it running. This allows you to connect to the container using `molecule login` or just test running your role multiple times against an existing container.
 
-You can attach to the running container by using `docker exec`
+If you already have a role being testing using Molecule, add this to the `platforms` section of your `molecule.yml` to use this image:
 
-    docker exec -i -t ansible-test bash
+```yaml
+platforms:
+  - name: role-test
+    image: "samdoran/${MOLECULE_DISTRIBUTION:-centos7}-ansible:latest"
+    command: ${MOLECULE_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: yes
+    pre_build_image: yes
+```
 
-Once you are done testing, you can stop and remove the container.
+The important parts are `pre_build_image: yes` and the `image` name. Molecule allows you to use environment variables in the configuration file, which is very handy. This allows you to easily change the container that molecule uses for tests (among other things) simply by changing the enivorment variable.
 
-    docker stop ansible-test
-    docker rm ansible-test
-
-## Automated Testing ##
-
-You can automate the steps outlined above using [this script](https://gist.github.com/samdoran/c3d392ee697881fa33a1d1a65814a07b).
+```
+env MOLECULE_DISTRIBUTION=debian9 molecule test

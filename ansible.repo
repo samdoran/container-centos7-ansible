@@ -1,6 +1,0 @@
-[ansible]
-name=Ansible
-baseurl=https://releases.ansible.com/ansible/rpm/release/epel-$releasever-$basearch/
-enabled=1
-gpgcheck=1
-gpgkey=https://releases.ansible.com/keys/RPM-GPG-KEY-ansible-release.pub

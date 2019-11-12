@@ -10,12 +10,9 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == system
     rm -f /lib/systemd/system/basic.target.wants/*;\
     rm -f /lib/systemd/system/anaconda.target.wants/*;
 
-COPY ansible.repo /etc/yum.repos.d/ansible.repo
-
 RUN yum makecache fast \
     && yum --disableplugin=fastestmirror -y install epel-release \
     && yum --disableplugin=fastestmirror -y install \
-    ansible \
     bash \
     deltarpm \
     e2fsprogs \
@@ -29,6 +26,8 @@ RUN yum makecache fast \
     yum-plugin-ovl \
     && yum -y update \
     && rm -rf /var/cache/yum
+
+RUN pip install ansible q
 
 RUN sed -i 's/Defaults    requiretty/Defaults    !requiretty/g' /etc/sudoers
 

@@ -31,8 +31,6 @@ RUN pip install ansible q
 
 RUN sed -i 's/Defaults    requiretty/Defaults    !requiretty/g' /etc/sudoers
 
-RUN echo -e "localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python" > /etc/ansible/hosts
-
 RUN echo '# BLANK FSTAB' > /etc/fstab
 
 VOLUME ["/sys/fs/cgroup"]

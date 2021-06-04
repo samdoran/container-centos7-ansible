@@ -1,4 +1,4 @@
-FROM centos:7
+FROM quay.io/centos/centos:7
 ENV container=docker
 
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
@@ -27,7 +27,7 @@ RUN yum makecache fast \
     && yum -y update \
     && rm -rf /var/cache/yum
 
-RUN pip install ansible q
+RUN pip install ansible-core q
 
 RUN sed -i 's/Defaults    requiretty/Defaults    !requiretty/g' /etc/sudoers
 
